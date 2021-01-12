@@ -95,10 +95,6 @@ def array2track(arr, tempo=50000, metadata=[]):
   prev = arr[:-1]
   delta = current - prev
 
-  # encode the first note separately from the rest (dirty I know)
-  
-
-
   # parse delta into notes.
   last_time = 0
   for d in delta:
