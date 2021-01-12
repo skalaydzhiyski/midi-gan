@@ -1,8 +1,10 @@
 #!../bin/python
 import mido
-import string
 import numpy as np
 import matplotlib.pyplot as plt
+
+import sys
+import string
 
 N_PIANO_NOTES            = 88
 DEFAULT_TEMPO            = 500000
@@ -93,11 +95,13 @@ def array2track(arr, tempo=50000, metadata=[]):
   prev = arr[:-1]
   delta = current - prev
 
-  # TODO: Parsing of the time is wrong here ... we need to be more creative in the encoding / decoding of the time steps !
+  # encode the first note separately from the rest (dirty I know)
+  
 
-  # parse transitions
+
+  # parse delta into notes.
   last_time = 0
-  for d in delta[1:]:
+  for d in delta:
     if d.any():
       notes_on = np.where(d>0)[0]
       notes_on_vel = d[notes_on]
@@ -116,7 +120,7 @@ def array2track(arr, tempo=50000, metadata=[]):
         msg = mido.Message('note_off', note=n+DEFAULT_NOTE_OFFSET, velocity=DEFAULT_RELEASE_VELOCITY, time=new_time)
         track.append(msg)
         first = False
-      last_time = 0
+      last_time = 0 
     else:
       # if no change -> we UP the time since we're holding the same state
       last_time += 1
@@ -132,10 +136,12 @@ if __name__ == '__main__':
 
   # load midi
   path = 'res.mid'
-  mid = mido.MidiFile(path, clip=True)
+  mid = mido.MidiFile(path, clip=False)
   print(f'just loaded: {mid}')
   print(f' \nwith dict:')
   for k,v in mid.__dict__.items(): print(k,': ', v)
+  print('\nsample:')
+  for x in mid.tracks[0][:20]: print(x)
 
   # now get the numpy array representing the track from our file 
   res = midi2array(mid)
