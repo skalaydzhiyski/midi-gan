@@ -2,6 +2,7 @@
 import mido
 import string
 import numpy as np
+import matplotlib.pyplot as plt
 
 N_PIANO_NOTES            = 88
 DEFAULT_TEMPO            = 500000
@@ -10,10 +11,11 @@ DEFAULT_NOTE_OFFSET      = 21
 DEFAULT_RELEASE_VELOCITY = 64
 
 
-def plot_midi(res):
-  import matplotlib.pyplot as plt
-  plt.plot(range(res.shape[0]), np.multiply(np.where(res>0, 1, 0), range(1, 89)), marker='.', markersize=1, linestyle='')
-  plt.title("nocturne_27_2_(c)inoue.mid")
+def plot_midi(files):
+  for idx, f in enumerate(files):
+    fig = plt.figure()
+    fig.suptitle(str(idx))
+    plt.plot(range(f.shape[0]), np.multiply(np.where(f>0, 1, 0), range(1, 89)), marker='.', markersize=1, linestyle='')
   plt.show()
 
 
@@ -68,8 +70,6 @@ def track2matrix(track):
       if new_time > 0:
         res += [last_state] * new_time
       last_state, last_time = new_state, new_time
-    else:
-      print(msg.type)
   return res
 
 
@@ -93,26 +93,33 @@ def array2track(arr, tempo=50000, metadata=[]):
   prev = arr[:-1]
   delta = current - prev
 
-  print(delta[:5])
+  # TODO: Parsing of the time is wrong here ... we need to be more creative in the encoding / decoding of the time steps !
 
   # parse transitions
-  time_ = 0
-  for d in delta:
+  last_time = 0
+  for d in delta[1:]:
     if d.any():
-      notes_on = np.where(d > 0)[0]
+      notes_on = np.where(d>0)[0]
       notes_on_vel = d[notes_on]
-      notes_off = np.where(d > 0)[0]
+      notes_off = np.where(d<0)[0]
 
+      # used to indicate which note should get the new time
+      # (all the rest of the notes in the row will have 0 since they're played AT THE SAME TIME)
+      first = True
       for n,v in zip(notes_on, notes_on_vel):
-        msg = mido.Message('note_on', note=n+DEFAULT_NOTE_OFFSET, velocity=v, time=time_)
+        new_time = last_time if first else 0
+        msg = mido.Message('note_on', note=n+DEFAULT_NOTE_OFFSET, velocity=v, time=new_time)
         track.append(msg)
-      for n in off_notes:
-        msg = mido.Message('note_off', note=n+DEFAULT_NOTE_OFFSET, velocity=DEFAULT_RELEASE_VELOCITY, time=time_)
+        first = False
+      for n in notes_off:
+        new_time = last_time if first else 0
+        msg = mido.Message('note_off', note=n+DEFAULT_NOTE_OFFSET, velocity=DEFAULT_RELEASE_VELOCITY, time=new_time)
         track.append(msg)
-
-      sys.exit(0)
-    else: # if no change -> we up the time since we're repeating/holding last state 
-      time_ += 1
+        first = False
+      last_time = 0
+    else:
+      # if no change -> we UP the time since we're holding the same state
+      last_time += 1
 
   # add the end of track msg 
   track.append(eot)
@@ -129,17 +136,12 @@ if __name__ == '__main__':
   print(f'just loaded: {mid}')
   print(f' \nwith dict:')
   for k,v in mid.__dict__.items(): print(k,': ', v)
-  print(f' \nwith sample:')
-  for msg in mid.tracks[0][2:7]: print(msg)
 
   # now get the numpy array representing the track from our file 
   res = midi2array(mid)
   print('\n Output:')
   print(res)
   print(res.shape)
-  #print('\n Example:')
-  #print(res[:5])
-#  plot_midi(res)
 
   # init new MIDI file 
   out = mido.MidiFile(type=0)
@@ -149,8 +151,12 @@ if __name__ == '__main__':
   # init track
   metadata = [msg for msg in mid.tracks[0] if msg.type not in ['note_on', 'note_off']]
   track = array2track(res, tempo=DEFAULT_TEMPO, metadata=metadata) 
-  for x in track: print(x)
   out.tracks.append(track)
-  out.save('midi_new.res')
+  out.save('other.mid')
   print('done!')
+
+  # Use this to plot the data from both the initial res.mid and the other.mid which is generated based off the encoding of the initial MIDI file.
+  #other = mido.MidiFile('other.mid', clip=True)
+  #new = midi2array(other)
+  #plot_midi([res, new])
 

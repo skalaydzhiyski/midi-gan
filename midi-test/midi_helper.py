@@ -113,6 +113,7 @@ if __name__ == '__main__':
   print('\n Output:')
   print(res)
   print(res.shape)
+  print(res[:10])
   print('\n Example:')
   print(res[:5])
 
