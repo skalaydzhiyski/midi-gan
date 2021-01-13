@@ -17,7 +17,8 @@ def plot_midi(files):
   for idx, f in enumerate(files):
     fig = plt.figure()
     fig.suptitle(str(idx))
-    plt.plot(range(f.shape[0]), np.multiply(np.where(f>0, 1, 0), range(1, 89)), marker='.', markersize=1, linestyle='')
+    plt.plot(
+        range(f.shape[0]), np.multiply(np.where(f>0, 1, 0), range(1, 89)), marker='.', markersize=1, linestyle='')
   plt.show()
 
 

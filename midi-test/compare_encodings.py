@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 
 from run_custom_test import midi2array
 
+
 def plot_midi(files):
   for idx, f in enumerate(files):
     fig = plt.figure()
@@ -36,18 +37,19 @@ def check_similar(res, other):
   similar_notes = 0
   total_notes = 0
   bad = []
-  for x,y in zip(res.tracks[0], other.tracks[0]):
+  for i, (x,y) in enumerate(zip(res.tracks[0], other.tracks[0])):
     if x.type in ['note_on', 'note_off']:
       sim = similar(x,y)
       similar_notes += int(sim)
       total_notes += 1
-      if not sim: bad.append((x,y))
+      if not sim: bad.append((i, x,y))
   #print([i for i,x in enumerate(s) if not x])
   print(total_notes)
   print(similar_notes)
 
   print("bad ones:")
-  for x, y in bad[:10]:
+  for i, x, y in bad[:10]:
+    print(i)
     print(x)
     print(y)
     print()
@@ -70,6 +72,9 @@ print()
 
 #compare_mdi(res, other)
 check_similar(res, other)
+print()
+print(other.tracks[0][100])
+print(res.tracks[0][100])
 
 
 #res = midi2array(res)
