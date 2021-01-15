@@ -123,7 +123,7 @@ def array2track(arr, tempo=50000, metadata=[]):
 
 
 if __name__ == "__main__":
-  res_mid = mido.MidiFile('./res.mid', clip=False)
+  res_mid = mido.MidiFile('./data/res.mid', clip=False)
   res = midi2array(res_mid)
 
   # copy attributes 
@@ -137,6 +137,6 @@ if __name__ == "__main__":
   # generate track from encoding
   track = array2track(res, tempo=DEFAULT_TEMPO, metadata=metadata)
   other_mid.tracks.append(track)
-  other_mid.save("other.mid")
+  other_mid.save("./data/other.mid")
   print("done!")
   
