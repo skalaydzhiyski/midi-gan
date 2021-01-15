@@ -63,7 +63,6 @@ if __name__ == '__main__':
     else:
       d.append(msg2dict(msg))
 
-
   # copy notes from the dict (dict has ALL the info we need)
   for msg, type_ in d:
     t = 'note_on' if type_ else 'note_off'
@@ -73,6 +72,7 @@ if __name__ == '__main__':
   out.save('from_dict.mid')
 
   # Now we have to try and parse the dict into a numpy array
+  parse_notes(d)
 
 
 
