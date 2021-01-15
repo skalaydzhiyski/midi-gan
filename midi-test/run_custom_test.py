@@ -60,7 +60,6 @@ def track2matrix(track):
       first_note_idx = i
       break
   
-  print(f'start building the notes array from {first_note_idx}')
   last_state, last_time = get_new_state(track[first_note_idx], [0]*N_PIANO_NOTES)
   for i in range(first_note_idx, len(track)):
     msg = track[i]
@@ -123,61 +122,21 @@ def array2track(arr, tempo=50000, metadata=[]):
   return track
 
 
-if __name__ == '__main__':
-  # IMPORTANT -> IF WE WANT TO AUTOMATE THIS WHOLE PROCESS WE NEED TO CHECK FOR SEVERAL THINGS:
-  #               (like n_channels, n_tracks, metadata, program, etc..)
-
-  # load midi
-  path = 'res.mid'
-  res_mid = mido.MidiFile(path, clip=False)
-  print(f'just loaded: {res_mid}')
-  print(f' \nwith dict:')
-  for k,v in res_mid.__dict__.items(): print(k,': ', v)
-
-  size = 128
-  print('\nsample:')
-#  for x in res_mid.tracks[0][:size]: print(x)
-
-  # now get the numpy array representing the track from our file 
+if __name__ == "__main__":
+  res_mid = mido.MidiFile('./res.mid', clip=False)
   res = midi2array(res_mid)
-#  print('\n Output:')
-#  for x in res[:size]: print(x)
-#  print(res.shape)
 
-  # TODO: Change the encoding if there is something missing.
-  print("test the encoding of array")
-
-  # init new MIDI file 
+  # copy attributes 
   other_mid = mido.MidiFile(type=0)
   for key, value in res_mid.__dict__.items():
     if key not in ['file', 'tracks']: setattr(other_mid, key, value)
 
-  # init track
+  # make metadata 
   metadata = [msg for msg in res_mid.tracks[0] if msg.type not in ['note_on', 'note_off']]
-  track = array2track(res, tempo=DEFAULT_TEMPO, metadata=metadata) 
+
+  # generate track from encoding
+  track = array2track(res, tempo=DEFAULT_TEMPO, metadata=metadata)
   other_mid.tracks.append(track)
-  other_mid.save('other.mid')
-  print('done!')
-
-  # Use this to plot the data from both the initial res.mid and the other.mid which is generated based off the encoding of the initial MIDI file.
-  other_mid = mido.MidiFile('other.mid', clip=True)
-  other = midi2array(other_mid)
-
-  res_track = res_mid.tracks[0]
-  other_track = other_mid.tracks[0]
-#  bad = []
-#  for x,y in zip(res_track, other_track):
-#    bad.append(x == y)
-#    print(x)
-#    print(y)
-#    print()
-
-
-  print(len(res_track))
-  print([x for x in res_track[:5]])
-  print(len(other_track))
-  print([x for x in other_track[:5]])
-
+  other_mid.save("other.mid")
+  print("done!")
   
-  plot_midi([res, other])
-
