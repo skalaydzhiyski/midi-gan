@@ -52,10 +52,13 @@ def serialize(data):
       pickle.dump((attr, md), f)
   np.save(TRAIN_DATA_PATH + 'train.npy', mats)
 
-
-if __name__ == "__main__":
+def parse_mp3():
   res = make_data()
   clean()
   serialize(res)
+
+
+if __name__ == "__main__":
+  parse_mp3()
 
 
