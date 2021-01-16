@@ -4,18 +4,15 @@ bin*
 lib*
 share
 etc
-data/
-data/small/*
-data/wav/*
-data/temp/*
 **/*.pyc
 *pretrained*
 temp*
 test*
 pyvenv*
-data/small/*
-data/wav/*
 output-spleeter/*
 **/*.ipynb
 *checkpoints*
+
+data/**/*.mp3
+data/**/*.mid
 
