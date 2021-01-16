@@ -8,7 +8,10 @@ import pickle
 
 from midi.parser import midi2array
 
-from conf import Path
+INPUT_DATA_PATH  = './data/input/'
+OUTPUT_DATA_PATH = './data/output/'
+METADATA_PATH    = './data/metadata/'
+TRAIN_DATA_PATH  = './data/train/'
 
 
 def is_note(msg):
@@ -19,7 +22,7 @@ def is_attr(kv):
 
 def clean():
   print('clean previous data..')
-  dirs = [Path.METADATA_PATH, Path.TRAIN_DATA_PATH]
+  dirs = [METADATA_PATH, TRAIN_DATA_PATH]
   for d in dirs:
     if os.path.exists(d):
       shutil.rmtree(d)
@@ -27,10 +30,10 @@ def clean():
 
 def make_data():
   attrs, metadata, mats = [], [], []
-  for d in os.listdir(Path.INPUT_DATA_PATH):
+  for d in os.listdir(INPUT_DATA_PATH):
     print(f'parsing {d} ..')
     # read in midi
-    mid = mido.MidiFile(Path.INPUT_DATA_PATH + d, clip=False)
+    mid = mido.MidiFile(INPUT_DATA_PATH + d, clip=False)
     # get params and metadata
     a = dict([x for x in mid.__dict__.items() if is_attr(x)])
     m = dict([(i,x) for i,x in enumerate(mid.tracks[0]) if not is_note(x)])
@@ -45,9 +48,9 @@ def serialize(data):
   print('serializing..')
   attrs, metadata, mats = data
   for i,(attr,md) in enumerate(zip(attrs, metadata)):
-    with open(Path.METADATA_PATH + f'meta_{i}.pkl', 'wb') as f:
+    with open(METADATA_PATH + f'meta_{i}.pkl', 'wb') as f:
       pickle.dump((attr, md), f)
-  np.save(Path.TRAIN_DATA_PATH + 'train.npy', mats)
+  np.save(TRAIN_DATA_PATH + 'train.npy', mats)
 
 
 if __name__ == "__main__":
