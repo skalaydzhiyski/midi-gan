@@ -129,7 +129,7 @@ if __name__ == "__main__":
   # copy attributes 
   other_mid = mido.MidiFile(type=0)
   for key, value in res_mid.__dict__.items():
-    if key not in ['file', 'tracks']: setattr(other_mid, key, value)
+    if key not in ['filename', 'tracks']: setattr(other_mid, key, value)
 
   # make metadata 
   metadata = [msg for msg in res_mid.tracks[0] if msg.type not in ['note_on', 'note_off']]
