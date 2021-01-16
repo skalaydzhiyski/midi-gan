@@ -10,8 +10,8 @@ from downloader import DataDownloader
 from conf import Path
 
 
-def download_tracks(artist='pink floyd', n_links=10):
-  if os.listdir(Path.MP3_DOWNLOAD_PATH) != 0:
+def download_tracks(artist='pink floyd', n_links=5):
+  if len(os.listdir(Path.MP3_DOWNLOAD_PATH)) > 0:
     print('Tracks already downloader')
     return 
 
