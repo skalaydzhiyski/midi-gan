@@ -11,6 +11,10 @@ from conf import Path
 
 
 def download_tracks(artist='pink floyd', n_links=10):
+  if os.listdir(Path.MP3_DOWNLOAD_PATH) != 0:
+    print('Tracks already downloader')
+    return 
+
   # get links
   dl = DataDownloader() 
   BASE_YOUTUBE_DL_CMD = f'youtube-dl --extract-audio -o "{Path.MP3_DOWNLOAD_PATH}%(id)s.%(ext)s" --match-filter "duration < 800" --restrict-filenames --ignore-errors -x --audio-format mp3 '
@@ -24,6 +28,7 @@ def download_tracks(artist='pink floyd', n_links=10):
     sp.call(BASE_YOUTUBE_DL_CMD + youtube_id, shell=True)
     print(f"done!\n")
 
+def split_tracks():
   for fname in os.listdir(Path.MP3_DOWNLOAD_PATH):
     # split the instrumental of a track (i.e. remove drums and vocals)
     full_path = Path.MP3_DOWNLOAD_PATH + fname
