@@ -73,8 +73,8 @@ def track2matrix(track):
 
 def midi2array(mid):
   # we only have one channel for now
-  res = track2matrix(mid.tracks[0])
-  return np.array(res)
+  res = np.array(track2matrix(mid.tracks[0]))
+  return res.reshape(res.shape[::-1])
 
 
 def array2track(arr, tempo=50000, metadata=[]):
