@@ -4,6 +4,7 @@ import numpy as np
 
 import os
 import sys
+import shutil
 import subprocess as sp
 
 from downloader import DataDownloader
@@ -35,7 +36,15 @@ def split_tracks():
     print(f'splitting {fname}')
     spleeter_cmd = f'spleeter separate -p spleeter:4stems -o {Path.SPLEETER_PATH} {full_path}'
     sp.call(spleeter_cmd.split())
-    print('splitting the track into 4 parts')
+    # remove extra parts 
+    path = Path.SPLEETER_PATH+fname.split('.')[0]
+    for part in os.listdir(path):
+      part_path = path + '/' + part
+      if 'other' in part:
+        os.rename(part_path, path + '.mp3')
+        break
+      os.remove(part_path)
+    shutil.rmtree(path)
 
 
 if __name__ == "__main__":

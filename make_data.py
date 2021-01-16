@@ -6,12 +6,11 @@ import os
 import sys
 import subprocess as sp
 
-from get_mp3 import download_tracks, split_tracks
+from preproc import download_tracks, split_tracks, parse_to_midi, make_dataset
 from conf import Path
 
 
 def make_data_dirs():
-  print('creating data directories..')
   if not os.path.exists(Path.DATA_PATH):
     os.mkdir(Path.DATA_PATH)
   for d in Path.DATA_DIRS:
@@ -23,6 +22,8 @@ def execute():
   make_data_dirs()
   download_tracks()
   split_tracks()
+  parse_to_midi()
+  make_dataset()
 
 
 if __name__ == "__main__":
