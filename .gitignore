@@ -1,4 +1,5 @@
 **/*.sw*
+__pycache__
 bin*
 lib*
 share
@@ -12,6 +13,6 @@ output-spleeter/*
 **/*.ipynb
 *checkpoints*
 
-data/**/*.mp3
-data/**/*.mid
+*/data/**/*.mp3
+*/data/**/*.mid
 
