@@ -2,6 +2,16 @@
 import mido
 
 
+# decorator for showing the stages of preprocessing.
+def show_func(f):
+  def inner(*args, **kwargs):
+    print(f'running {f.__name__}..')
+    res = f(*args, **kwargs)
+    print()
+    return res
+  return inner
+
+
 def get_standard_midi_file():
   res = mido.MidiFile(type=0)
   res.__dict__ = {'filename': None, 'type': 0, 'ticks_per_beat': 43, 'charset': 'latin1', 'debug': False, 'clip': False, 'tracks': []}

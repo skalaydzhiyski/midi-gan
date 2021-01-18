@@ -8,8 +8,10 @@ import subprocess as sp
 
 from preproc import download_tracks, split_tracks, parse_to_midi, make_dataset
 from conf import Path
+from util import show_func
 
 
+@show_func
 def make_data_dirs():
   if not os.path.exists(Path.DATA_PATH):
     os.mkdir(Path.DATA_PATH)

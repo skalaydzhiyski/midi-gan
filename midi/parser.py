@@ -80,10 +80,6 @@ def midi2array(mid):
 def array2track(arr, tempo=50000, metadata=[]):
   # init and add all metadata
   track = mido.MidiTrack()
-  eot = None
-  for msg in metadata: 
-    if msg.type != 'end_of_track': track.append(msg)
-    else: eot = msg
 
   # build transitions (delta)
   arr = np.concatenate([[[0]*arr.shape[1]], arr], axis=0)
@@ -116,9 +112,6 @@ def array2track(arr, tempo=50000, metadata=[]):
     else:
       # if no change -> we UP the time since we're holding the same state
       last_time += 1
-
-  # add the end of track msg 
-  track.append(eot)
   return track
 
 
