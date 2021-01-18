@@ -22,7 +22,8 @@ def make_data_dirs():
 
 def execute():
   make_data_dirs()
-  download_tracks()
+  # TODO: REMOVE THE FILTER DURATION AND N_LINKS FROM THE FUNC CALL
+  download_tracks(n_links=1, filter_duration=10000)
   split_tracks()
   parse_to_midi()
   make_dataset()

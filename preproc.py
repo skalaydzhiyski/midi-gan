@@ -68,20 +68,21 @@ def serialize(np_data):
 # ---------------------------------------------------------------------------------
 
 @show_func
-def download_tracks(artist='pink floyd', n_links=5):
+def download_tracks(artist='beethoven', n_links=5, filter_duration=800):
   if len(os.listdir(Path.MP3_DOWNLOAD_PATH)) > 0:
     print('Tracks already downloaded')
     return 
   # get links
-  youtube_dl_cmd = f'youtube-dl --extract-audio -o "{Path.MP3_DOWNLOAD_PATH}%(id)s.%(ext)s" --match-filter "duration < 800" --restrict-filenames --ignore-errors -x --audio-format mp3 '
-  links = get_links(artist, n_links)
-  print(links)
+  youtube_dl_cmd = f'youtube-dl --extract-audio -o "{Path.MP3_DOWNLOAD_PATH}%(id)s.%(ext)s" --match-filter "duration < {filter_duration}" --restrict-filenames --ignore-errors -x --audio-format mp3 '
   # download
-  for l in links:
-    youtube_id = l.split('=')[1]
-    print(f"downloading {l} / {youtube_id}..")
-    sp.call(youtube_dl_cmd + youtube_id, shell=True)
-    print(f"done!\n")
+  while len(os.listdir(Path.MP3_DOWNLOAD_PATH)) < n_links:
+    links = get_links(artist, n_links)
+    print(links)
+    for l in links:
+      youtube_id = l.split('=')[1]
+      print(f"downloading {l} / {youtube_id}..")
+      sp.call(youtube_dl_cmd + youtube_id, shell=True)
+      print(f"done!\n")
 
 
 @show_func
