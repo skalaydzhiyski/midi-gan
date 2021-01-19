@@ -76,6 +76,7 @@ def download_tracks(artist='beethoven', n_links=5, filter_duration=800):
   youtube_dl_cmd = f'youtube-dl --extract-audio -o "{Path.MP3_DOWNLOAD_PATH}%(id)s.%(ext)s" --match-filter "duration < {filter_duration}" --restrict-filenames --ignore-errors -x --audio-format mp3 '
   # download
   while len(os.listdir(Path.MP3_DOWNLOAD_PATH)) < n_links:
+    print(len(os.listdir(Path.MP3_DOWNLOAD_PATH)))
     links = get_links(artist, n_links)
     print(links)
     for l in links:

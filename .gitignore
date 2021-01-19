@@ -14,7 +14,7 @@ output-spleeter/*
 *checkpoints*
 
 data/**/*.mp3
-data/**/*.mp3
+data/**/*.mid
 */data/**/*.mp3
 */data/**/*.mid
 
