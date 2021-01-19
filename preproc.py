@@ -107,6 +107,8 @@ def split_tracks():
         break
       os.remove(part_path)
     shutil.rmtree(path)
+  for d in os.listdir(Path.SPLEETER_PATH):
+    os.remove(Path.SPLEETER_PATH + d)
 
 
 @show_func
