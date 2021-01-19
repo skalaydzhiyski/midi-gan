@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import sys
 import string
 
+# I know these should be in const :|
 N_PIANO_NOTES            = 88
 DEFAULT_TEMPO            = 500000
 DEFAULT_TPM              = 43

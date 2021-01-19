@@ -13,7 +13,6 @@ from conf import Path
 from const import Const
 from util import show_func
 
-# ----------------------------------- UTILS -----------------------------------------
 
 def note(msg):
   return msg.type in ('note_on', 'note_off')
@@ -36,39 +35,38 @@ def clean():
       shutil.rmtree(d)
     os.mkdir(d)
 
+@show_func
+def split_track(track):
+  # clean start of track with padding for the split to have equal lengths
+  padding_start = track.shape[1] % Const.TRACK_PART_SIZE
+  new = track[:,padding_start:]
+  n_parts = new.shape[1]//Const.TRACK_PART_SIZE
+  new = new.reshape(new.shape[::-1])
+  segments = np.array(np.split(new, n_parts)).reshape(n_parts, Const.N_PIANO_NOTES, -1)
+  return segments
+
 def make_data():
-  attrs, metadata, mats = [], [], []
-  for d in os.listdir(Path.INPUT_DATA_PATH):
+  tracks = os.listdir(Path.INPUT_DATA_PATH)
+  mid = mido.MidiFile(Path.INPUT_DATA_PATH + tracks[0], clip=False)
+  mats = midi2array(mid)
+  res = split_track(mats)
+  for d in tracks[1:]:
     print(f'parsing {d} ..')
     # read in midi
     mid = mido.MidiFile(Path.INPUT_DATA_PATH + d, clip=False)
-    # get params and metadata
-    a = dict([x for x in mid.__dict__.items() if is_attr(x)])
-    m = dict([(i,x) for i,x in enumerate(mid.tracks[0]) if not note(x)])
-    attrs.append(a)
-    metadata.append(m)
     # parse to matrix 
     mat = midi2array(mid)
     segs = split_track(mat)
-    mats += [segs]
-  return np.array(mats)
-
-def split_track(track):
-  print(track.shape)
-  # clean start of track with padding for the split to have equal lengths
-  padding_start = track.shape[1] % Const.TRACK_PART_SIZE
-  track = track[padding_start:]
-  segments = np.split(track, track.shape[1]/Const.TRACK_PART_SIZE)
-  return segments
+    res = np.concatenate([res, mats], axis=0)
+  return res
 
 def serialize(np_data):
   print('serializing..')
   np.save(Path.TRAIN_DATA_PATH + 'train.npy', np_data)
 
-# ---------------------------------------------------------------------------------
 
 @show_func
-def download_tracks(artist='beethoven', n_links=5, filter_duration=800):
+def download_tracks(artist='beethoven moonlight sonata', n_links=5, filter_duration=800):
   if len(os.listdir(Path.MP3_DOWNLOAD_PATH)) > 0:
     print('Tracks already downloaded')
     return 
@@ -92,7 +90,7 @@ def split_tracks():
       print("Tracks alredy spleeeted :) nothing to do.")
       return
 
-  # split chunks kand extract melody only
+  # split chunks and extract melody only
   for fname in os.listdir(Path.MP3_DOWNLOAD_PATH):
     # split the instrumental of a track (i.e. remove drums and vocals)
     full_path = Path.MP3_DOWNLOAD_PATH + fname
@@ -127,6 +125,7 @@ def parse_to_midi():
 @show_func
 def make_dataset():
   res = make_data()
+  print(f'final dataset shape: {res.shape}')
   clean()
   serialize(res)
 
