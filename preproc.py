@@ -107,9 +107,6 @@ def split_tracks():
         break
       os.remove(part_path)
     shutil.rmtree(path)
-  for d in os.listdir(Path.SPLEETER_PATH):
-    os.remove(Path.SPLEETER_PATH + d)
-
 
 @show_func
 def parse_to_midi():
@@ -123,6 +120,9 @@ def parse_to_midi():
     waon_cmd = f'waon -i {full_path} -o {out_path}.mid'
     sp.call(waon_cmd.split())
 
+  # clean spleeter dir when done
+  for d in os.listdir(Path.SPLEETER_PATH):
+    os.remove(Path.SPLEETER_PATH + d)
 
 @show_func
 def make_dataset():

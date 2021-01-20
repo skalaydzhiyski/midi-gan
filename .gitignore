@@ -15,6 +15,5 @@ output-spleeter/*
 
 data/**/*.mp3
 data/**/*.mid
-*/data/**/*.mp3
-*/data/**/*.mid
+data/**/*.npy
 
