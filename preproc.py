@@ -22,9 +22,14 @@ def is_attr(kv):
 
 def get_links(search_str, n_results):
   res = []
-  results = YoutubeSearch(search_str, max_results=n_results).to_dict()
-  for r in results:
-    res.append(r['url_suffix'])
+  while len(res) == 0:
+    results = YoutubeSearch(search_str, max_results=n_results).to_dict()
+    for r in results:
+      link = r['url_suffix']
+      if not r['id'].startswith('-'):
+        res.append(r['url_suffix'])
+      else:
+        n_results += 1
   return res
 
 def clean():
@@ -74,35 +79,34 @@ def download_tracks(artist='beethoven moonlight sonata', n_links=5, filter_durat
   youtube_dl_cmd = f'youtube-dl --extract-audio -o "{Path.MP3_DOWNLOAD_PATH}%(id)s.%(ext)s" --match-filter "duration < {filter_duration}" --restrict-filenames --ignore-errors -x --audio-format mp3 '
   # download
   while len(os.listdir(Path.MP3_DOWNLOAD_PATH)) < n_links:
-    print(len(os.listdir(Path.MP3_DOWNLOAD_PATH)))
     links = get_links(artist, n_links)
-    print(links)
     for l in links:
-      youtube_id = l.split('=')[1]
+      youtube_id = l.split('v=')[1] 
       print(f"downloading {l} / {youtube_id}..")
       sp.call(youtube_dl_cmd + youtube_id, shell=True)
       print(f"done!\n")
 
 
 @show_func
-def split_tracks():
+def split_tracks(classical=True):
   if len(os.listdir(Path.SPLEETER_PATH)) > 0:
       print("Tracks alredy spleeeted :) nothing to do.")
       return
 
-  # split chunks and extract melody only
+  n_stems = '2' if classical else '4'
+  main_part = 'accompaniment' if classical else 'other'
+
   for fname in os.listdir(Path.MP3_DOWNLOAD_PATH):
-    # split the instrumental of a track (i.e. remove drums and vocals)
     full_path = Path.MP3_DOWNLOAD_PATH + fname
-    print(f'splitting {fname}')
-    spleeter_cmd = f'spleeter separate -p spleeter:4stems -o {Path.SPLEETER_PATH} {full_path}'
+    spleeter_cmd = f'spleeter separate -p spleeter:{n_stems}stems -o {Path.SPLEETER_PATH} {full_path}'
+    print(spleeter_cmd)
     sp.call(spleeter_cmd.split())
 
-    # remove extra parts 
+    # keep only the melody
     path = Path.SPLEETER_PATH+fname.split('.')[0]
     for part in os.listdir(path):
       part_path = path + '/' + part
-      if 'other' in part:
+      if main_part in part:
         os.rename(part_path, path + '.mp3')
         break
       os.remove(part_path)

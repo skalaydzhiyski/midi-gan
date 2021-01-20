@@ -7,13 +7,13 @@ etc
 **/*.pyc
 *pretrained*
 temp*
-test*
+./test*
 pyvenv*
 output-spleeter/*
 **/*.ipynb
 *checkpoints*
 
-data/**/*.mp3
-data/**/*.mid
-data/**/*.npy
+data
+ext
+data/
 

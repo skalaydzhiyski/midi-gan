@@ -20,12 +20,12 @@ def make_data_dirs():
     if not os.path.exists(full_path):
       os.mkdir(full_path)
 
-def execute():
+def execute(midi_ready=False):
   make_data_dirs()
-  # TODO: REMOVE THE FILTER DURATION AND N_LINKS FROM THE FUNC CALL
-  download_tracks(n_links=1, filter_duration=10000)
-  split_tracks()
-  parse_to_midi()
+  if not midi_ready:
+    download_tracks(n_links=1, filter_duration=10000)
+    split_tracks()
+    parse_to_midi()
   make_dataset()
 
 

@@ -78,8 +78,7 @@ def midi2array(mid):
   return res.reshape(res.shape[::-1])
 
 
-def array2track(arr, tempo=50000, metadata=[]):
-  # init and add all metadata
+def array2track(arr, tempo=50000):
   track = mido.MidiTrack()
 
   # build transitions (delta)
@@ -125,11 +124,8 @@ if __name__ == "__main__":
   for key, value in res_mid.__dict__.items():
     if key not in ['filename', 'tracks']: setattr(other_mid, key, value)
 
-  # make metadata 
-  metadata = [msg for msg in res_mid.tracks[0] if msg.type not in ['note_on', 'note_off']]
-
   # generate track from encoding
-  track = array2track(res, tempo=DEFAULT_TEMPO, metadata=metadata)
+  track = array2track(res, tempo=DEFAULT_TEMPO)
   other_mid.tracks.append(track)
   other_mid.save("./data/other.mid")
   print("done!")
