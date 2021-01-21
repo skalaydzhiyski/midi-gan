@@ -4,11 +4,13 @@ import numpy as np
 from youtube_search import YoutubeSearch
 
 import os
+import sys
 import shutil
 import subprocess as sp
 import pickle
 
-from midi.parser import midi2array
+#from midi.parser import midi2array
+from midi.multi_channel_parser import midi2array
 from conf import Path
 from const import Const
 from util import show_func
@@ -42,7 +44,6 @@ def clean():
 
 @show_func
 def split_track(track):
-  # clean start of track with padding for the split to have equal lengths
   padding_start = track.shape[1] % Const.TRACK_PART_SIZE
   new = track[:,padding_start:]
   n_parts = new.shape[1]//Const.TRACK_PART_SIZE
@@ -54,6 +55,7 @@ def make_data():
   tracks = os.listdir(Path.INPUT_DATA_PATH)
   mid = mido.MidiFile(Path.INPUT_DATA_PATH + tracks[0], clip=False)
   mats = midi2array(mid)
+  mats = mats.reshape(mats.shape[::-1])
   res = split_track(mats)
   for d in tracks[1:]:
     print(f'parsing {d} ..')
@@ -61,8 +63,9 @@ def make_data():
     mid = mido.MidiFile(Path.INPUT_DATA_PATH + d, clip=False)
     # parse to matrix 
     mat = midi2array(mid)
+    mat = mat.reshape(mat.shape[::-1])
     segs = split_track(mat)
-    res = np.concatenate([res, mats], axis=0)
+    res = np.concatenate([res, segs], axis=0)
   return res
 
 def serialize(np_data):
@@ -128,7 +131,6 @@ def parse_to_midi():
   for d in os.listdir(Path.SPLEETER_PATH):
     os.remove(Path.SPLEETER_PATH + d)
 
-@show_func
 def make_dataset():
   res = make_data()
   print(f'final dataset shape: {res.shape}')

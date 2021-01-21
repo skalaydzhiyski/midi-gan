@@ -48,7 +48,7 @@ def track2seq(track):
   return result
 
 
-def mid2arry(mid, min_msg_pct=0.1):
+def midi2array(mid, min_msg_pct=0.1):
   tracks_len = [len(tr) for tr in mid.tracks]
   min_n_msg = max(tracks_len) * min_msg_pct
   # convert each track to nested list
@@ -70,8 +70,7 @@ def mid2arry(mid, min_msg_pct=0.1):
   return all_arys[min(ends): max(ends)]
 
 
-
-def arry2mid(ary, tempo=500000):
+def array2midi(ary, tempo=500000):
   # get the difference
   new_ary = np.concatenate([np.array([[0] * 88]), np.array(ary)], axis=0)
   changes = new_ary[1:] - new_ary[:-1]

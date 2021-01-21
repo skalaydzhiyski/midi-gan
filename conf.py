@@ -1,5 +1,6 @@
 
 class Path: 
+  EXT_DATA            = './ext/'
   DATA_PATH           = './data/'
   MP3_DOWNLOAD_PATH   = './data/mp3/'
   INPUT_DATA_PATH     = './data/input/'
