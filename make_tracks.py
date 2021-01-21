@@ -12,9 +12,9 @@ from util import get_standard_midi_file
 
 def make_tracks(n_samples=1, out_fname='out.npy'):
   # load generated tracks
-  gen_data = np.load(Path.GEN_OUTPUT_PATH + out_fname)
-  idxs = np.random.randint(0, gen_data.shape[0], n_samples)
-  samples = gen_data[idxs]
+  generated_data = np.load(Path.GEN_OUTPUT_PATH + out_fname)
+  idxs = np.random.randint(0, generated_data.shape[0], n_samples)
+  samples = generated_data[idxs]
   for i,s in enumerate(samples):
     # get default metadata into file 
     mid = get_standard_midi_file()
