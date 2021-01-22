@@ -1,6 +1,5 @@
 import numpy as np
-# Uncomment this when the below issues is fixed (see both of the TODO section)
-#import librosa
+import librosa
 from urllib import request, parse
 from tqdm import tqdm
 from youtube_search import YoutubeSearch
@@ -9,7 +8,6 @@ import os
 import pickle
 import subprocess as sp
 
-# TODO: Whole class could be refactored heavily :/
 
 class DataDownloader:
   """
@@ -43,9 +41,6 @@ class DataDownloader:
     return res_path
 
   def serialize(self, wav, out, base_path='data/proc'):
-    # TODO: Fix Librosa issue here:
-    #  Librosa errors out here, since there is a dependency to llvmlite (PyPI) package.
-    #  They don't seem to have wheels for Python 3.9... the solution is to wait or downgrade.
     print(f' serializing {out} !')
     res_path = f'{base_path}/{out}'
     track, sample_freq = librosa.load(wav)

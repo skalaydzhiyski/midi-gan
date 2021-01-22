@@ -36,6 +36,8 @@ def get_new_state(new_msg, last_state):
   new_msg, on_ = msg2dict(str(new_msg))
   new_state = switch_note(last_state, note=new_msg['note'], velocity=new_msg['velocity'], on_=on_) if on_ is not None else last_state
   return [new_state, new_msg['time']]
+
+
 def track2seq(track):
   # piano has 88 notes, corresponding to note id 21 to 108, any note out of the id range will be ignored
   result = []
@@ -51,12 +53,14 @@ def track2seq(track):
 def midi2array(mid, min_msg_pct=0.1):
   tracks_len = [len(tr) for tr in mid.tracks]
   min_n_msg = max(tracks_len) * min_msg_pct
+
   # convert each track to nested list
   all_arys = []
   for i in range(len(mid.tracks)):
     if len(mid.tracks[i]) > min_n_msg:
       ary_i = track2seq(mid.tracks[i])
       all_arys.append(ary_i)
+
   # make all nested list the same length
   max_len = max([len(ary) for ary in all_arys])
   for i in range(len(all_arys)):
