@@ -106,7 +106,7 @@ def run_training_loop():
       optim_gen.step()
   
       if i % print_rate == 0:
-        print('[%d/%d][%d/%d]\Dis Loss: %.4f\Gen Loss: %.4f\tD(x): %.4f\tD(G(z)): %.4f / %.4f'
+        print('[%d/%d][%d/%d]\tDis Loss: %.4f\tGen Loss: %.4f\tD(x): %.4f\tD(G(z)): %.4f / %.4f'
                 % (epoch, n_epochs, i, len(train_dl), total_loss_dis.item(), total_loss_gen.item(), D_x, D_G_z1, D_G_z2))
 
       losses_dis.append(total_loss_dis)
@@ -122,7 +122,7 @@ def run_training_loop():
 
   # store samples
   print("Training finished. Saving generated tracks..")
-  out_path = Path.SAMPLE_TRACKS_PATH+'res.npy'
+  out_path = Path.GEN_OUTPUT_PATH+'res.npy'
   np.save(out_path, np.concatenate(sample_tracks, axis=0))
   print("done.")
 

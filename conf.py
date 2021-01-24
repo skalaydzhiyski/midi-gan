@@ -5,10 +5,9 @@ class Path:
   MP3_DOWNLOAD_PATH   = './data/mp3/'
   INPUT_DATA_PATH     = './data/input/'
   OUTPUT_DATA_PATH    = './data/output/'
-  SAMPLE_TRACKS_PATH  = './data/sample/'
   TRAIN_DATA_PATH     = './data/train/'
   GEN_OUTPUT_PATH     = './data/gen/'
   SPLEETER_PATH       = './data/spleeter/'
-  DATA_DIRS           = ['input','output','train','spleeter','mp3', 'gen', 'sample']
+  DATA_DIRS           = ['input','output','train','spleeter','mp3', 'gen']
 
 
