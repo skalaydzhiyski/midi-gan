@@ -68,9 +68,10 @@ def make_data():
     res = np.concatenate([res, segs], axis=0)
   return res
 
-def serialize(np_data):
+def serialize(X):
   print('serializing..')
-  np.save(Path.TRAIN_DATA_PATH + 'train.npy', np_data)
+  # add channels to the serialized data to make it easier for training later on 
+  np.save(Path.TRAIN_DATA_PATH + 'train.npy', X)
 
 
 @show_func

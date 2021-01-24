@@ -76,7 +76,7 @@ def midi2array(mid, min_msg_pct=0.1):
 
 def array2midi(ary, tempo=500000):
   # get the difference
-  new_ary = np.concatenate([np.array([[0] * 88]), np.array(ary)], axis=0)
+  new_ary = np.concatenate([np.array([[0] * 88]), ary], axis=0)
   changes = new_ary[1:] - new_ary[:-1]
   # create a midi file with an empty track
   mid_new = mido.MidiFile()

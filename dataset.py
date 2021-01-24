@@ -1,4 +1,6 @@
 
+from const import Const
+
 class Dataset:
   def __init__(self, x, transform):
     self.x = x
