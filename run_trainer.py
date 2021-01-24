@@ -116,13 +116,15 @@ def run_training_loop():
       if (iters % save_sample_rate == 0) or ((epoch == n_epochs-1) and (i == len(train_dl)-1)):
         with torch.no_grad():
           fake_track = gen(fixed_noise).detach().cpu()
-        sample_tracks.append(fake_track.numpy())
-      
+          fake_track = np.interp(fake_track, (fake_track.min(), fake_track.max()), (0, 127)).astype(int)
+        sample_tracks.append(fake_track)
       iters += 1
 
   # store samples
+  print("Training finished. Saving generated tracks..")
   out_path = Path.SAMPLE_TRACKS_PATH+'res.npy'
   np.save(out_path, np.concatenate(sample_tracks, axis=0))
+  print("done.")
 
 
 if __name__ == '__main__':
