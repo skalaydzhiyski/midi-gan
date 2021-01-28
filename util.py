@@ -12,6 +12,10 @@ def show_func(f):
   return inner
 
 
+def scale(x):
+  return np.interp(x, (x.min(), x.max()), (0, 127))
+
+
 def get_standard_midi_file():
   res = mido.MidiFile(type=0)
   res.__dict__ = {'filename': None, 'type': 0, 'ticks_per_beat': 43, 'charset': 'latin1', 'debug': False, 'clip': False, 'tracks': []}

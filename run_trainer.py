@@ -116,7 +116,7 @@ def run_training_loop():
       if (iters % save_sample_rate == 0) or ((epoch == n_epochs-1) and (i == len(train_dl)-1)):
         with torch.no_grad():
           fake_track = gen(fixed_noise).detach().cpu()
-          fake_track = np.interp(fake_track, (fake_track.min(), fake_track.max()), (0, 127)).astype(int)
+          fake_track = scale(fake_track).astype(int)
         sample_tracks.append(fake_track)
       iters += 1
 
