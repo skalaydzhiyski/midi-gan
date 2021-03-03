@@ -9,7 +9,7 @@ import pickle
 import subprocess as sp
 
 
-class DataDownloader:
+class Downloader:
   """
   Purpose: download, parse mp3 to wav and decode audio
   to numpy matrix used for training.
@@ -22,7 +22,7 @@ class DataDownloader:
     self.keywords = keywords
 
   def gen_ds(self, artist, n_res, ignore_download=False):
-    res = DataDownloader.get_all_mp3() \
+    res = Downloader.get_all_mp3() \
           if ignore_download else self.get_tracks(artist, n_res)
     for idx, fname in enumerate(res):
       if not self.serialize(self.conv_to_wav(fname), fname):
@@ -64,7 +64,7 @@ class DataDownloader:
       ytid = link.split('=')[1]
       print(f'Executing "{self.BASE_YOUTUBE_DL_CMD}{ytid}"')
       sp.call(self.BASE_YOUTUBE_DL_CMD + ytid, shell=True)
-    return DataDownloader.get_all_mp3()
+    return Downloader.get_all_mp3()
 
   def get_links(self, search_str, n_results):
     res = []
