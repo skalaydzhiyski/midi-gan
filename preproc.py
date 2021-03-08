@@ -1,4 +1,3 @@
-#!./bin/python
 import mido
 import numpy as np
 from youtube_search import YoutubeSearch

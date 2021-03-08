@@ -1,4 +1,3 @@
-#!../bin/python
 import mido
 import numpy as np
 import matplotlib.pyplot as plt
