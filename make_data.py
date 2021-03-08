@@ -18,14 +18,15 @@ def make_data_dirs(from_ext):
     if not os.path.exists(full_path):
       os.mkdir(full_path)
   # move ext data
-  for d in os.listdir(Path.EXT_DATA):
-    fname = Path.EXT_DATA + d
-    try:
-      # if we can load it, we can use it
-      _ = mido.MidiFile(fname)
-      shutil.copyfile(fname, Path.INPUT_DATA_PATH + d) 
-    except Exception as e:
-      print(f'skipping {fname}... {str(e)}')
+  if os.path.exists(Path.EXT_DATA):
+    for d in os.listdir(Path.EXT_DATA):
+      fname = Path.EXT_DATA + d
+      try:
+        # if we can load it, we can use it
+        _ = mido.MidiFile(fname)
+        shutil.copyfile(fname, Path.INPUT_DATA_PATH + d) 
+      except Exception as e:
+        print(f'skipping {fname}... {str(e)}')
 
 @click.command()
 @click.option('--from-ext', is_flag=True,
