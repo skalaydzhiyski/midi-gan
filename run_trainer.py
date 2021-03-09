@@ -1,4 +1,3 @@
-#!/Users/architect/anaconda3/envs/py37/bin/python
 import torch
 from torchvision import transforms
 import numpy as np
